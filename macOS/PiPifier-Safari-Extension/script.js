@@ -56,6 +56,7 @@ var players = [
                {name: "Netflix", shouldAddButton: shouldAddNetflixButton, addButton: addNetflixButton},
                {name: "Wistia", shouldAddButton: shouldAddWistiaButton, addButton: addWistiaButton},
                {name: "VUPlay", shouldAddButton: shouldAddVUPlayButton, addButton: addVUPlayButton},
+               {name: "YeloPlay", shouldAddButton: shouldAddYeloPlayButton, addButton: addYeloPlayButton},
                //TODO: add other players here
                ];
 
@@ -186,5 +187,28 @@ function addVUPlayButton() {
     buttonImage.height = 54;
     button.appendChild(buttonImage);
     var fullscreenButton = document.getElementsByClassName("vuplay-control-fullscreen")[0];
+    fullscreenButton.parentNode.insertBefore(button, fullscreenButton);
+}
+
+function shouldAddYeloPlayButton() {
+    return (location.hostname.match(/^(www\.)?yeloplay\.be$/)
+            && (location.pathname.match(/^\/watch-tv$/)))
+    && document.getElementsByClassName('PiPifierButton').length == 0;
+}
+
+function addYeloPlayButton() {
+    if (!shouldAddYeloPlayButton()) return;
+    var button = document.createElement("button");
+    button.className = "PiPifierButton";
+    button.title = "PiP (by PiPifier)";
+    button.onclick = enablePiP;
+    var buttonImage = document.createElement("img");
+    buttonImage.src = whiteSVG_Icon;
+    buttonImage.width = 40;
+    buttonImage.height = 25;
+    buttonImage.className = "button";
+    button.appendChild(buttonImage);
+    document.getElementsByClassName("buttons has-swipe-button")[0].style.width = "200px";
+    var fullscreenButton = document.getElementsByTagName("player-fullscreen-button")[0];
     fullscreenButton.parentNode.insertBefore(button, fullscreenButton);
 }
