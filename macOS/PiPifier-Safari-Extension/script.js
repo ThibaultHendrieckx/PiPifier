@@ -14,7 +14,7 @@ function dispatchMessage(messageName, parameters) {
 }
 
 function messageHandler(event) {
-    if (event.name === "enablePiP" && getVideo() != null) {
+    if (event.name === "enablePiP" && getVideos().length > 0) {
         enablePiP();
     } else if (event.name === "addCustomPiPButtonToPlayer") {
         window[event.message.callback]() //Calls the function specified as callback
@@ -24,7 +24,7 @@ function messageHandler(event) {
 var previousResult = null;
 
 function checkForVideo() {
-    if (getVideo() != null) {
+    if (getVideos().length > 0) {
         addCustomPiPButtons();
         if (previousResult === null || previousResult === false) {
             dispatchMessage("videoCheck", {found: true});
@@ -38,12 +38,14 @@ function checkForVideo() {
     }
 }
 
-function getVideo() {
-    return document.getElementsByTagName('video')[0];
+function getVideos() {
+    return Array.from(document.getElementsByTagName('video'));
 }
 
 function enablePiP() {
-    getVideo().webkitSetPresentationMode('picture-in-picture');
+    getVideos().forEach(function(el){
+        el.webkitSetPresentationMode('picture-in-picture')
+    });
 }
 
 //----------------- Custom Button Methods -----------------
@@ -86,7 +88,7 @@ function addYouTubeButton() {
     buttonImage.width = 22;
     buttonImage.height = 36;
     button.appendChild(buttonImage);
-    
+
     document.getElementsByClassName("ytp-right-controls")[0].appendChild(button);
 }
 
