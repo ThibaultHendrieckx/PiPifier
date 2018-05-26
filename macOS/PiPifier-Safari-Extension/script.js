@@ -55,6 +55,7 @@ var players = [
                {name: "VideoJS", shouldAddButton: shouldAddVideoJSButton, addButton: addVideoJSButton},
                {name: "Netflix", shouldAddButton: shouldAddNetflixButton, addButton: addNetflixButton},
                {name: "Wistia", shouldAddButton: shouldAddWistiaButton, addButton: addWistiaButton},
+               {name: "VUPlay", shouldAddButton: shouldAddVUPlayButton, addButton: addVUPlayButton},
                //TODO: add other players here
                ];
 
@@ -166,4 +167,24 @@ function addNetflixButton(timeOutCounter) {
         return;
     }
     playerStatusDiv.insertBefore(button, playerStatusDiv.firstChild);
+}
+
+function shouldAddVUPlayButton() {
+    return document.getElementsByClassName('vuplay-video-control-container').length > 0
+    && document.getElementsByClassName('PiPifierButton').length == 0;
+}
+
+function addVUPlayButton() {
+    if (!shouldAddVUPlayButton()) return;
+    var button = document.createElement("button");
+    button.className = "PiPifierButton vuplay-control vjs-button";
+    button.title = "PiP (by PiPifier)";
+    button.onclick = enablePiP;
+    var buttonImage = document.createElement("img");
+    buttonImage.src = whiteSVG_Icon;
+    buttonImage.width = 29;
+    buttonImage.height = 54;
+    button.appendChild(buttonImage);
+    var fullscreenButton = document.getElementsByClassName("vuplay-control-fullscreen")[0];
+    fullscreenButton.parentNode.insertBefore(button, fullscreenButton);
 }
