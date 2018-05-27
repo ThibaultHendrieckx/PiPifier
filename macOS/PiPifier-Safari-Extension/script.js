@@ -14,7 +14,7 @@ function dispatchMessage(messageName, parameters) {
 }
 
 function messageHandler(event) {
-    if (event.name === "enablePiP" && getVideos().length > 0) {
+    if (event.name === "enablePiP" && getVideo() != null) {
         enablePiP();
     } else if (event.name === "addCustomPiPButtonToPlayer") {
         window[event.message.callback]() //Calls the function specified as callback
@@ -24,7 +24,7 @@ function messageHandler(event) {
 var previousResult = null;
 
 function checkForVideo() {
-    if (getVideos().length > 0) {
+    if (getVideo() != null) {
         addCustomPiPButtons();
         if (previousResult === null || previousResult === false) {
             dispatchMessage("videoCheck", {found: true});
@@ -38,14 +38,19 @@ function checkForVideo() {
     }
 }
 
-function getVideos() {
-    return Array.from(document.getElementsByTagName('video'));
+function getVideo() {
+    return document.getElementsByTagName('video')[0];
+    var videos = document.getElementsByTagName('video');
+    if (videos.length < 2) return videos[0];
+    
+    for (i = 0; i < videos.length; ++i) {
+        if (!videos[i].paused) return videos[i];
+    }
+    return null;
 }
 
 function enablePiP() {
-    getVideos().forEach(function(el){
-        el.webkitSetPresentationMode('picture-in-picture')
-    });
+    getVideo().webkitSetPresentationMode('picture-in-picture');
 }
 
 //----------------- Custom Button Methods -----------------
