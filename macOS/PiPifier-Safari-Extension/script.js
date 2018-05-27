@@ -144,7 +144,8 @@ function addWistiaButton() {
 
 
 function shouldAddNetflixButton() {
-    return location.hostname.match('netflix')
+    return (location.hostname.match(/^(www\.)?netflix\.com$/)
+            && location.pathname.match("watch"))
     && document.getElementsByClassName('PiPifierButton').length == 0;
 }
 
@@ -152,27 +153,27 @@ function addNetflixButton(timeOutCounter) {
     if (!shouldAddNetflixButton()) return;
     if (timeOutCounter == null) timeOutCounter = 0;
     var button = document.createElement("button");
-    button.className = "PiPifierButton";
+    button.className = "PiPifierButton touchable PlayerControls--control-element";
     button.title = "PiP (by PiPifier)";
     button.onclick = enablePiP;
     button.style.backgroundColor = "transparent";
     button.style.border = "none";
-    button.style.maxHeight = "inherit";
-    button.style.width = "70px";
-    button.style.marginRight = "2px";
     var buttonImage = document.createElement("img");
     buttonImage.src = whiteSVG_Icon;
-    buttonImage.style.verticalAlign = "middle";
+    buttonImage.className = "touchable PlayerControls--control-element";
     buttonImage.style.maxHeight = "40%";
     button.appendChild(buttonImage);
-    var playerStatusDiv = document.getElementsByClassName("player-status")[0];
-    if (playerStatusDiv == null && timeOutCounter < 3) {
+    var fullscreenButton = document.getElementsByClassName("button-bvuiFullScreenOn")[0];
+    if (fullscreenButton == null && timeOutCounter < 3) {
         //this is needed because the div is sometimes not reachable on the first load
         //also necessary to count up and stop at some time to avoid endless loop on main netflix page
         setTimeout(function() {addNetflixButton(timeOutCounter+1);}, 3000);
+        // some weird bugfix where you need to pause the video before safari/netflix allows pip
+        getVideo().pause()
+        getVideo().play()
         return;
     }
-    playerStatusDiv.insertBefore(button, playerStatusDiv.firstChild);
+    fullscreenButton.parentNode.insertBefore(button, fullscreenButton);
 }
 
 function shouldAddVUPlayButton() {
