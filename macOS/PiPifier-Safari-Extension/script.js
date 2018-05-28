@@ -24,7 +24,7 @@ function messageHandler(event) {
 var previousResult = null;
 
 function checkForVideo() {
-    if (getVideo() != null) {
+    if (getVideo() != null && getVideo().videoTracks.length > 0) {
         addCustomPiPButtons();
         if (previousResult === null || previousResult === false) {
             dispatchMessage("videoCheck", {found: true});
