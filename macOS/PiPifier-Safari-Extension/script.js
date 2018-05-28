@@ -4,7 +4,7 @@ var blackSVG_Icon = safari.extension.baseURI + 'PiP_Toolbar_Icon.svg';
 
 safari.self.addEventListener("message", messageHandler); // Message recieved from Swift code
 window.onfocus = function() {
-    previousResult = null;
+    previousResult = false;
     checkForVideo();
 }; // Tab selected
 new MutationObserver(checkForVideo).observe(document, {subtree: true, childList: true}); // DOM changed
@@ -21,17 +21,17 @@ function messageHandler(event) {
     }
 }
 
-var previousResult = null;
+var previousResult = false;
 
 function checkForVideo() {
     if (getVideo() != null && getVideo().videoTracks.length > 0) {
         addCustomPiPButtons();
-        if (previousResult === null || previousResult === false) {
+        if (!previousResult) {
             dispatchMessage("videoCheck", {found: true});
         }
         previousResult = true;
     } else if (window == window.top) {
-        if (previousResult === null || previousResult === true) {
+        if (previousResult) {
             dispatchMessage("videoCheck", {found: false});
         }
         previousResult = false;
