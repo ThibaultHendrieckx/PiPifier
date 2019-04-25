@@ -24,7 +24,7 @@ function messageHandler(event) {
 var previousResult = false;
 
 function checkForVideo() {
-    if (getVideo() != null && getVideo().videoTracks.length > 0) {
+    if (getVideo() != null /* && getVideo().videoTracks.length > 0 */) {
         addCustomPiPButtons();
         if (!previousResult) {
             dispatchMessage("videoCheck", {found: true});
@@ -39,10 +39,9 @@ function checkForVideo() {
 }
 
 function getVideo() {
-    return document.getElementsByTagName('video')[0];
+    // return document.getElementsByTagName('video')[0];
     var videos = document.getElementsByTagName('video');
-    if (videos.length < 2) return videos[0];
-    
+    // if (videos.length < 2) return videos[0];
     for (i = 0; i < videos.length; ++i) {
         if (!videos[i].paused) return videos[i];
     }
